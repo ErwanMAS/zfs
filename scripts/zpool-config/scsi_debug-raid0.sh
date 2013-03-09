@@ -57,8 +57,8 @@ zpool_create() {
 
 	DEVICES="${DEVICES} ${SDDEVICE}"
 
-	msg "${ZPOOL} create ${FORCE_FLAG} ${ZPOOL_NAME} ${DEVICES}"
-	${ZPOOL} create ${FORCE_FLAG} ${ZPOOL_NAME} ${DEVICES} ||            \
+	msg "${ZPOOL} create ${FORCE_FLAG} ${SECTORS_4K_FLAGS} ${ZPOOL_NAME} ${DEVICES}"
+	${ZPOOL} create ${FORCE_FLAG} ${SECTORS_4K_FLAGS} ${ZPOOL_NAME} ${DEVICES} ||            \
 		(${RMMOD} scsi_debug && exit 1)
 }
 

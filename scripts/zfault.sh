@@ -50,6 +50,7 @@ DESCRIPTION:
 OPTIONS:
 	-h      Show this message
 	-v      Verbose
+        -4      Use 4k sectors
 	-c      Cleanup md+lo+file devices at start
 	-t <#>  Run listed tests
 	-s <#>  Skip listed tests
@@ -57,7 +58,7 @@ OPTIONS:
 EOF
 }
 
-while getopts 'hvct:s:?' OPTION; do
+while getopts '4hvct:s:?' OPTION; do
 	case $OPTION in
 	h)
 		usage
@@ -65,6 +66,9 @@ while getopts 'hvct:s:?' OPTION; do
 		;;
 	v)
 		VERBOSE=1
+		;;
+	4)
+		ZFAULT_SECTORS_4K=1
 		;;
 	c)
 		CLEANUP=1
@@ -301,7 +305,14 @@ test_setup() {
 	local TMP_CACHE=$4
 
 	${ZFS_SH} zfs="spa_config_path=${TMP_CACHE}" || fail 1
-	${ZPOOL_CREATE_SH} -p ${POOL_NAME} -c ${POOL_CONFIG} || fail 2
+	if [ -n "$ZFAULT_SECTORS_4K" ]
+	then
+	    SECTORS_4K_FLAGS="-o ashift=12"
+	    export SECTORS_4K_FLAGS
+	    ${ZPOOL_CREATE_SH} -p ${POOL_NAME} -c ${POOL_CONFIG} || fail 2
+	else
+	    ${ZPOOL_CREATE_SH} -p ${POOL_NAME} -c ${POOL_CONFIG} || fail 2
+	fi
 	${ZFS} create -V 64M ${POOL_NAME}/${ZVOL_NAME} || fail 3
 
 	# Trigger udev and re-read the partition table to ensure all of

@@ -36,9 +36,9 @@ zpool_create() {
 		DEVICES_M2="${DEVICES_M2} ${DEVICE}"
 	done
 
-	msg ${ZPOOL} create ${FORCE_FLAG} ${ZPOOL_NAME} \
+	msg ${ZPOOL} create ${FORCE_FLAG} ${SECTORS_4K_FLAGS} ${ZPOOL_NAME} \
 		mirror ${DEVICES_M1} mirror ${DEVICES_M2}
-	${ZPOOL} create ${FORCE_FLAG} ${ZPOOL_NAME} \
+	${ZPOOL} create ${FORCE_FLAG} ${SECTORS_4K_FLAGS} ${ZPOOL_NAME} \
 		mirror ${DEVICES_M1} mirror ${DEVICES_M2}
 }
 
